@@ -1,4 +1,4 @@
-from typing import Lists
+from typing import List
 from dataclasses import dataclass
 
 @dataclass
@@ -21,19 +21,19 @@ class File:
     uri: str
     creation_timestamp: int
     datatype: str
-    
+
 @dataclass
 class InstagramMessage:
     sender: InstagramUser
     text: str
     timestamp: int
-    photos: List[File]
-    audios: List[File]
-    videos: List[File]
-    reactions: List[Reaction]
-    call_duration: int
-    share: Share
-    is_unsent: bool
+    photos: List[File] = None
+    audios: List[File] = None
+    videos: List[File] = None
+    reactions: List[Reaction] = None
+    call_duration: int = None
+    share: Share = None
+    is_unsent: bool = None
 
 
 def parse_messages(msgs):
@@ -68,11 +68,11 @@ def parse_messages(msgs):
             message.reactions = reactions
         if "share" in m:
             share = Share(
-                link=m["share"]["link"],
+                link=m["share"].get("link"),
                 text=m["share"].get("share_text"),
                 original_content_owner=m["share"].get("original_content_owner")
             )
-            m.share = share
+            message.share = share
         messages.append(message)
     return sorted(messages, key=lambda x: x.timestamp)
         
